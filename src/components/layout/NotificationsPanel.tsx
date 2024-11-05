@@ -73,7 +73,7 @@ export function NotificationsPanel() {
   };
 
   return (
-    <div className="fixed right-4 mt-2 w-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 transform transition-all duration-300 ease-in-out animate-slideIn">
+    <div className="absolute right-4 mt-2 w-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50">
       <div className="p-4 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export function NotificationsPanel() {
           onClick={() => setShowAll(!showAll)}
           className="w-full text-center text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
         >
-          {showAll ? 'Show less' : `View all notifications (${notifications.length})`}
+          {showAll ? 'View all notifications' : `Show less (${notifications.length})`}
         </button>
       </div>
     </div>

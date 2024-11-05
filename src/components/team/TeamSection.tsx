@@ -39,7 +39,7 @@ export function TeamSection() {
   return (
     <div id="team-section" className="bg-white dark:bg-gray-800 rounded-xl shadow-sm mb-8">
       <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Meet Team Hacknomics of IIIT AGARTALA</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Meet Team Hacknomics</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">The brilliant minds behind this project</p>
       </div>
       

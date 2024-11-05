@@ -19,7 +19,9 @@ function SettingsModal({ isOpen, onClose, section }: SettingsModalProps) {
     language: 'en',
     timezone: 'IST',
     currency: currency,
-    dateFormat: 'DD/MM/YYYY'
+    dateFormat: 'DD/MM/YYYY',
+    twoFactorAuth: true,
+    loginAlerts: true
   });
 
   const handleSave = async () => {
@@ -112,24 +114,28 @@ function SettingsModal({ isOpen, onClose, section }: SettingsModalProps) {
                   <option value="EUR">EUR (€)</option>
                 </select>
               </div>
-            </div>
-          )}
-
-          {section === 'security' && (
-            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Two-Factor Authentication
+                  Security
                 </label>
-                <div className="mt-2">
-                  <label className="inline-flex items-center">
+                <div className="space-y-3">
+                  <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       checked={generalSettings.twoFactorAuth}
                       onChange={(e) => setGeneralSettings(prev => ({ ...prev, twoFactorAuth: e.target.checked }))}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm text-gray-600">Enable two-factor authentication</span>
+                    <span className="text-sm text-gray-600">Enable Two-Factor Authentication</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={generalSettings.loginAlerts}
+                      onChange={(e) => setGeneralSettings(prev => ({ ...prev, loginAlerts: e.target.checked }))}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">Email alerts for new login attempts</span>
                   </label>
                 </div>
               </div>
@@ -139,20 +145,30 @@ function SettingsModal({ isOpen, onClose, section }: SettingsModalProps) {
           {section === 'notifications' && (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Notifications
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="emailNotifications"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">Email Notifications</span>
                 </label>
-                <div className="mt-2">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      checked={generalSettings.emailNotifications}
-                      onChange={(e) => setGeneralSettings(prev => ({ ...prev, emailNotifications: e.target.checked }))}
-                    />
-                    <span className="ml-2 text-sm text-gray-600">Receive email notifications</span>
-                  </label>
-                </div>
+                <p className="text-xs text-gray-500 mt-1 ml-6">
+                  Receive email notifications for important updates and alerts
+                </p>
+              </div>
+              <div>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="pushNotifications"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">Push Notifications</span>
+                </label>
+                <p className="text-xs text-gray-500 mt-1 ml-6">
+                  Receive push notifications for real-time updates
+                </p>
               </div>
             </div>
           )}
@@ -187,12 +203,6 @@ export function SettingsPanel() {
       icon: Settings,
       label: 'General Settings',
       description: 'Account preferences and settings'
-    },
-    {
-      id: 'security',
-      icon: Shield,
-      label: 'Security',
-      description: 'Password and authentication settings'
     },
     {
       id: 'notifications',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowDownRight, ArrowUpRight, Filter, Search, X, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Filter, Search, Loader2, AlertCircle } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 interface FilterState {
   type: 'all' | 'income' | 'expense';
@@ -10,6 +11,7 @@ interface FilterState {
 
 export function TransactionList() {
   const { transactions, loading, error } = useTransactions();
+  const { formatAmount } = useCurrency();
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -198,7 +200,7 @@ export function TransactionList() {
                   : 'text-red-600 dark:text-red-400'
               }`}>
                 {transaction.type === 'income' ? '+' : '-'}
-                ${Math.abs(transaction.amount).toLocaleString()}
+                {formatAmount(transaction.amount)}
               </div>
             </div>
           ))

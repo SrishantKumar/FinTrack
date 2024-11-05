@@ -8,6 +8,17 @@ import { RevenueGrowthModal } from './RevenueGrowthModal';
 import { RunwayModal } from './RunwayModal';
 import { InsightsPanel } from '../insights/InsightsPanel';
 
+const CurrencySymbols = () => {
+  return (
+    <>
+      <span className="currency-symbol-3d" style={{ top: '10%', left: '5%', animationDelay: '0s' }}>$</span>
+      <span className="currency-symbol-3d" style={{ top: '30%', right: '10%', animationDelay: '1s' }}>€</span>
+      <span className="currency-symbol-3d" style={{ bottom: '20%', left: '15%', animationDelay: '2s' }}>₹</span>
+      <span className="currency-symbol-3d" style={{ bottom: '40%', right: '20%', animationDelay: '3s' }}>£</span>
+    </>
+  );
+};
+
 export function MetricsGrid() {
   const { totalIncome, totalExpenses, cashBalance } = useTransactions();
   const { formatAmount } = useCurrency();
@@ -19,28 +30,32 @@ export function MetricsGrid() {
       value: formatAmount(cashBalance),
       change: '+12.5%',
       trend: 'up',
-      icon: DollarSign
+      icon: DollarSign,
+      animation: 'animate-float'
     },
     {
       name: 'Monthly Burn Rate',
       value: formatAmount(totalExpenses),
       change: '-8.2%',
       trend: 'down',
-      icon: TrendingDown
+      icon: TrendingDown,
+      animation: 'animate-float'
     },
     {
       name: 'Revenue Growth',
       value: formatAmount(totalIncome),
       change: '+2.3%',
       trend: 'up',
-      icon: TrendingUp
+      icon: TrendingUp,
+      animation: 'animate-float'
     },
     {
       name: 'Runway',
       value: '18 months',
       change: '+2 months',
       trend: 'up',
-      icon: Clock
+      icon: Clock,
+      animation: 'animate-float'
     }
   ];
 
@@ -61,15 +76,16 @@ export function MetricsGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <CurrencySymbols />
         {metrics.map((metric) => (
           <div
             key={metric.name}
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition-all transform hover:-translate-y-1 duration-300"
             onClick={() => setActiveModal(metric.name)}
           >
             <div className="flex items-center justify-between">
-              <div className="p-2 bg-blue-50 dark:bg-blue-900 rounded-lg">
+              <div className={`p-2 bg-blue-50 dark:bg-blue-900 rounded-lg icon-3d ${metric.animation}`}>
                 <metric.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <span className={`text-sm font-medium ${
