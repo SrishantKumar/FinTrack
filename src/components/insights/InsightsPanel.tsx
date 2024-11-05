@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TrendingUp, DollarSign, Target, LineChart, ArrowRight, Download } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
 import { generatePDF } from '../utils/pdfGenerator';

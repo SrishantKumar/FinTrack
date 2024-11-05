@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ArrowDownRight, ArrowUpRight, Filter, Search, Loader2, AlertCircle } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
 import { useCurrency } from '../../context/CurrencyContext';

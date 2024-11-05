@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, Download, TrendingDown } from 'lucide-react';
 import { generatePDF } from '../utils/pdfGenerator';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Bell, Settings, User, Users } from 'lucide-react';
 import { NotificationsPanel } from './NotificationsPanel';
 import { SettingsPanel } from './SettingsPanel';

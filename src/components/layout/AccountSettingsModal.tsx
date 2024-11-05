@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Mail, Lock, Bell, Shield } from 'lucide-react';
+import { X, User, Bell, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 

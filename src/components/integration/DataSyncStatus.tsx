@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CheckCircle2, RefreshCw, Link, AlertCircle } from 'lucide-react';
 
 interface Integration {

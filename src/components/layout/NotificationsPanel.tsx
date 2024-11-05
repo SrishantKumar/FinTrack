@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, ArrowUpRight, ArrowDownRight, X } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, ArrowUpRight } from 'lucide-react';
 
 interface Notification {
   id: number;

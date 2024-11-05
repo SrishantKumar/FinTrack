@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getAnalytics } from 'firebase/analytics';
 import { getAuth, browserLocalPersistence, setPersistence } from 'firebase/auth';
 
 const firebaseConfig = {

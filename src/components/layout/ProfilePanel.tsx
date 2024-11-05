@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { User, LogOut, Settings, HelpCircle } from 'lucide-react';
 import { AccountSettingsModal } from './AccountSettingsModal';
 import { HelpSupportModal } from './HelpSupportModal';

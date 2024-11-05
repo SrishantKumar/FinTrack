@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
 import { generatePDF } from '../utils/pdfGenerator';

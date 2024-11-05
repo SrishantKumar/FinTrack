@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Clock } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
 import { useCurrency } from '../../context/CurrencyContext';

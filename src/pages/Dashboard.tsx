@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navbar } from '../components/layout/Navbar';
 import { MetricsGrid } from '../components/metrics/MetricsGrid';
 import { RevenueTrend } from '../components/charts/RevenueTrend';

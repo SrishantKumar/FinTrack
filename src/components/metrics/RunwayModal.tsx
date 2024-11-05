@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, Download, Clock } from 'lucide-react';
 import { generatePDF } from '../utils/pdfGenerator';
 
