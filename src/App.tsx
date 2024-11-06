@@ -11,6 +11,7 @@ import { TeamSection } from './components/team/TeamSection';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { useAuth } from './context/AuthContext';
+import { Footer } from './components/layout/Footer';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { currentUser, loading } = useAuth();
@@ -25,17 +26,17 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 export function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<><Login /><Footer /></>} />
+          <Route path="/signup" element={<><SignUp /><Footer /></>} />
           <Route
             path="/"
             element={
               <PrivateRoute>
                 <>
                   <Navbar />
-                  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
                     <div className="mb-8">
                       <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                         Financial Overview
@@ -57,6 +58,7 @@ export function App() {
                     <TransactionList />
                     <TeamSection />
                   </main>
+                  <Footer />
                 </>
               </PrivateRoute>
             }

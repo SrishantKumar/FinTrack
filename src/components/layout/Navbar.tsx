@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { Bell, Settings, User, Users, AlertTriangle } from 'lucide-react';
+import { Bell, Settings, User, Users, AlertTriangle, PlayCircle } from 'lucide-react';
 import { NotificationsPanel } from './NotificationsPanel';
 import { SettingsPanel } from './SettingsPanel';
 import { ProfilePanel } from './ProfilePanel';
 import { ThemeToggle } from './ThemeToggle';
 import { AlertPanel } from '../alerts/AlertPanel';
 import { AlertBadge } from '../alerts/AlertBadge';
+import { OnboardingGuide } from '../onboarding/OnboardingGuide';
 import { useAlerts } from '../../context/AlertContext';
 
 export function Navbar() {
   const [activePanel, setActivePanel] = useState<
     'notifications' | 'settings' | 'profile' | 'team' | 'alerts' | null
   >(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const { unreadCount } = useAlerts();
 
   const scrollToTeam = () => {
@@ -38,6 +40,13 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowOnboarding(true)}
+              className="p-2 rounded-lg text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+              title="Getting Started Guide"
+            >
+              <PlayCircle className="h-5 w-5" />
+            </button>
             <ThemeToggle />
             <button
               className={`p-2 rounded-lg transition-colors ${
@@ -113,6 +122,9 @@ export function Navbar() {
       {activePanel === 'notifications' && <NotificationsPanel />}
       {activePanel === 'settings' && <SettingsPanel />}
       {activePanel === 'profile' && <ProfilePanel />}
+
+      {/* Onboarding Guide */}
+      {showOnboarding && <OnboardingGuide onClose={() => setShowOnboarding(false)} />}
     </nav>
   );
 }

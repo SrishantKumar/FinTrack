@@ -72,7 +72,7 @@ export function SignUp() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
-            <a href="https://fintrackbyiiita.netlify.app/" className="font-medium text-blue-600 hover:text-blue-500">
+            <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
               Sign in
             </a>
           </p>
