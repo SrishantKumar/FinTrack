@@ -1,26 +1,57 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { month: 'Jan', revenue: 120000 },
-  { month: 'Feb', revenue: 145000 },
-  { month: 'Mar', revenue: 132000 },
-  { month: 'Apr', revenue: 170000 },
-  { month: 'May', revenue: 185000 },
-  { month: 'Jun', revenue: 160000 }
-];
+import { useTransactions } from '../../context/TransactionContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export function RevenueTrend() {
+  const { transactions } = useTransactions();
+  const { formatAmount } = useCurrency();
+
+  // Group transactions by month and calculate revenue
+  const monthlyRevenue = transactions
+    .filter(t => t.type === 'income')
+    .reduce((acc: { [key: string]: number }, t) => {
+      const date = new Date(t.date);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      acc[monthKey] = (acc[monthKey] || 0) + t.amount;
+      return acc;
+    }, {});
+
+  // Create data array for last 6 months
+  const data = Array.from({ length: 6 }, (_, i) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const revenue = monthlyRevenue[monthKey] || 0;
+    return {
+      month: date.toLocaleString('default', { month: 'short' }),
+      revenue
+    };
+  }).reverse();
+
+  // Calculate growth percentage
+  const currentMonth = data[data.length - 1].revenue;
+  const previousMonth = data[data.length - 2].revenue || 1; // Avoid division by zero
+  const growthPercentage = ((currentMonth - previousMonth) / previousMonth) * 100;
+
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Revenue Trend</h3>
-          <p className="text-sm text-gray-500">Last 6 months</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Revenue Trend</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Last 6 months</p>
         </div>
-        <div className="flex items-center gap-2 text-green-600">
-          <ArrowUpRight className="h-4 w-4" />
-          <span className="text-sm font-medium">+12.5%</span>
+        <div className="flex items-center gap-2">
+          {growthPercentage >= 0 ? (
+            <ArrowUpRight className="h-4 w-4 text-green-600 dark:text-green-400" />
+          ) : (
+            <ArrowDownRight className="h-4 w-4 text-red-600 dark:text-red-400" />
+          )}
+          <span className={`text-sm font-medium ${
+            growthPercentage >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+          }`}>
+            {growthPercentage.toFixed(1)}%
+          </span>
         </div>
       </div>
       
@@ -38,10 +69,10 @@ export function RevenueTrend() {
             <YAxis 
               axisLine={false} 
               tickLine={false}
-              tickFormatter={(value) => `$${value/1000}k`}
+              tickFormatter={(value) => formatAmount(value)}
             />
             <Tooltip 
-              formatter={(value) => [`$${value}`, 'Revenue']}
+              formatter={(value: number) => [formatAmount(value), 'Revenue']}
               contentStyle={{ borderRadius: '8px' }}
             />
             <Area

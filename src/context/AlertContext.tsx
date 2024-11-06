@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Alert, FinancialData, AlertThresholds } from '../types/alerts';
 import { DEFAULT_ALERT_THRESHOLDS, ALERT_CHECK_INTERVAL } from '../constants/alerts';
 import { useTransactions } from './TransactionContext';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AlertContextType {
   alerts: Alert[];
@@ -153,8 +154,4 @@ export function useAlerts() {
     throw new Error('useAlerts must be used within an AlertProvider');
   }
   return context;
-}
-
-function uuidv4(): string {
-  throw new Error('Function not implemented.');
 }

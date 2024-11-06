@@ -20,40 +20,90 @@ const CurrencySymbols = () => {
 };
 
 export function MetricsGrid() {
-  const { totalIncome, totalExpenses, cashBalance } = useTransactions();
+  const { transactions, cashBalance } = useTransactions();
   const { formatAmount } = useCurrency();
   const [activeModal, setActiveModal] = useState<string | null>(null);
+
+  // Calculate month-over-month changes
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  // Current month data
+  const currentMonthTransactions = transactions.filter(t => {
+    const date = new Date(t.date);
+    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+  });
+
+  const currentMonthIncome = currentMonthTransactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const currentMonthExpenses = currentMonthTransactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  // Previous month data
+  const previousMonthTransactions = transactions.filter(t => {
+    const date = new Date(t.date);
+    return (date.getMonth() === (currentMonth - 1) && date.getFullYear() === currentYear) ||
+           (currentMonth === 0 && date.getMonth() === 11 && date.getFullYear() === currentYear - 1);
+  });
+
+  const previousMonthIncome = previousMonthTransactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const previousMonthExpenses = previousMonthTransactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  // Calculate percentage changes
+  const calculateChange = (current: number, previous: number): number => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return ((current - previous) / previous) * 100;
+  };
+
+  const cashBalanceChange = calculateChange(cashBalance, cashBalance - (currentMonthIncome - currentMonthExpenses));
+  const burnRateChange = calculateChange(currentMonthExpenses, previousMonthExpenses);
+  const revenueChange = calculateChange(currentMonthIncome, previousMonthIncome);
+
+  // Calculate runway in months
+  const averageMonthlyExpenses = currentMonthExpenses || 1; // Avoid division by zero
+  const runwayMonths = Math.floor(cashBalance / averageMonthlyExpenses);
+  const previousRunway = Math.floor((cashBalance - (currentMonthIncome - currentMonthExpenses)) / averageMonthlyExpenses);
+  const runwayChange = calculateChange(runwayMonths, previousRunway);
 
   const metrics = [
     {
       name: 'Cash Balance',
       value: formatAmount(cashBalance),
-      change: '+12.5%',
-      trend: 'up',
+      change: cashBalanceChange,
+      trend: cashBalanceChange >= 0 ? 'up' : 'down',
       icon: DollarSign,
       animation: 'animate-float'
     },
     {
       name: 'Monthly Burn Rate',
-      value: formatAmount(totalExpenses),
-      change: '-8.2%',
-      trend: 'down',
+      value: formatAmount(currentMonthExpenses),
+      change: burnRateChange,
+      trend: burnRateChange <= 0 ? 'up' : 'down', // Lower burn rate is better
       icon: TrendingDown,
       animation: 'animate-float'
     },
     {
       name: 'Revenue Growth',
-      value: formatAmount(totalIncome),
-      change: '+2.3%',
-      trend: 'up',
+      value: formatAmount(currentMonthIncome),
+      change: revenueChange,
+      trend: revenueChange >= 0 ? 'up' : 'down',
       icon: TrendingUp,
       animation: 'animate-float'
     },
     {
       name: 'Runway',
-      value: '18 months',
-      change: '+2 months',
-      trend: 'up',
+      value: `${runwayMonths} months`,
+      change: runwayChange,
+      trend: runwayChange >= 0 ? 'up' : 'down',
       icon: Clock,
       animation: 'animate-float'
     }
@@ -91,7 +141,7 @@ export function MetricsGrid() {
               <span className={`text-sm font-medium ${
                 metric.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
               }`}>
-                {metric.change}
+                {metric.change >= 0 ? '+' : ''}{metric.change.toFixed(1)}%
               </span>
             </div>
             <h3 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">{metric.value}</h3>

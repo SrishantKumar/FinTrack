@@ -1,5 +1,5 @@
 import { useAlerts } from '../../context/AlertContext';
-// Removed the import for 'date-fns' due to the error
+import { formatDistanceToNow } from 'date-fns';
 import { AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
 
 export function AlertPanel() {
@@ -34,10 +34,6 @@ export function AlertPanel() {
         return 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800';
     }
   };
-
-  function formatDistanceToNow(_timestamp: number, _arg1: { addSuffix: boolean; }): import("react").ReactNode {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <div className="divide-y divide-gray-100 dark:divide-gray-700">
