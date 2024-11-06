@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { TransactionProvider } from './context/TransactionContext';
 import { AuthProvider } from './context/AuthContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+import { AlertProvider } from './context/AlertContext';
 import './index.css';
 
 const rootElement = document.getElementById('root');
@@ -16,7 +17,9 @@ createRoot(rootElement).render(
       <ThemeProvider>
         <CurrencyProvider>
           <TransactionProvider>
-            <App />
+            <AlertProvider>
+              <App />
+            </AlertProvider>
           </TransactionProvider>
         </CurrencyProvider>
       </ThemeProvider>

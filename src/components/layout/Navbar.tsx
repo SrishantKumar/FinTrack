@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { Bell, Settings, User, Users } from 'lucide-react';
+import { Bell, Settings, User, Users, AlertTriangle } from 'lucide-react';
 import { NotificationsPanel } from './NotificationsPanel';
 import { SettingsPanel } from './SettingsPanel';
 import { ProfilePanel } from './ProfilePanel';
 import { ThemeToggle } from './ThemeToggle';
+import { AlertPanel } from '../alerts/AlertPanel';
+import { AlertBadge } from '../alerts/AlertBadge';
+import { useAlerts } from '../../context/AlertContext';
 
 export function Navbar() {
   const [activePanel, setActivePanel] = useState<
-    'notifications' | 'settings' | 'profile' | 'team' | null
+    'notifications' | 'settings' | 'profile' | 'team' | 'alerts' | null
   >(null);
+  const { unreadCount } = useAlerts();
 
   const scrollToTeam = () => {
     const teamSection = document.getElementById('team-section');
@@ -28,7 +32,7 @@ export function Navbar() {
               alt="Hacknomics Logo"
               className="h-8 w-auto mr-3 animate-fadeIn"
             />
-            <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400 animate-slideInRight">
+            <span className="text-xl font-bold text-blue-600 dark:text-blue-400 animate-slideInRight">
               FinTrack By Hacknomics
             </span>
           </div>
@@ -44,6 +48,19 @@ export function Navbar() {
               onClick={scrollToTeam}
             >
               <Users className="h-5 w-5" />
+            </button>
+            <button
+              className={`p-2 rounded-lg transition-colors relative ${
+                activePanel === 'alerts'
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                  : 'text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'
+              }`}
+              onClick={() =>
+                setActivePanel(activePanel === 'alerts' ? null : 'alerts')
+              }
+            >
+              <AlertTriangle className="h-5 w-5" />
+              {unreadCount > 0 && <AlertBadge />}
             </button>
             <button
               className={`p-2 rounded-lg transition-colors ${
@@ -88,6 +105,11 @@ export function Navbar() {
       </div>
 
       {/* Dropdown Panels */}
+      {activePanel === 'alerts' && (
+        <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 z-50">
+          <AlertPanel />
+        </div>
+      )}
       {activePanel === 'notifications' && <NotificationsPanel />}
       {activePanel === 'settings' && <SettingsPanel />}
       {activePanel === 'profile' && <ProfilePanel />}
