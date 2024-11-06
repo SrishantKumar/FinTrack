@@ -143,7 +143,7 @@ export function NotificationsPanel() {
           onClick={() => setShowAll(!showAll)}
           className="w-full text-center text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
         >
-          {showAll ? 'View all notifications' : `Show less (${notifications.length})`}
+          {showAll ? 'Show less' : `View all notifications (${notifications.length})`}
         </button>
       </div>
     </div>
