@@ -8,6 +8,7 @@ import { TransactionList } from './components/transactions/TransactionList';
 import { DataSyncStatus } from './components/integration/DataSyncStatus';
 import { QuickAddTransaction } from './components/transactions/QuickAddTransaction';
 import { TeamSection } from './components/team/TeamSection';
+import { CashBurnEducation } from './components/education/CashBurnEducation';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { useAuth } from './context/AuthContext';
@@ -48,6 +49,7 @@ export function App() {
 
                     <DataSyncStatus />
                     <MetricsGrid />
+                    <CashBurnEducation />
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                       <RevenueTrend />
