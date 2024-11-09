@@ -14,6 +14,7 @@ interface Transaction {
 
 interface TransactionContextType {
   transactions: Transaction[];
+  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'status'>) => Promise<void>;
   totalIncome: number;
   totalExpenses: number;
@@ -78,6 +79,7 @@ export function TransactionProvider({ children }: { children: React.ReactNode })
   return (
     <TransactionContext.Provider value={{
       transactions,
+      setTransactions,
       addTransaction,
       totalIncome,
       totalExpenses,

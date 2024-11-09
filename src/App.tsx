@@ -8,6 +8,7 @@ import { TransactionList } from './components/transactions/TransactionList';
 import { DataSyncStatus } from './components/integration/DataSyncStatus';
 import { QuickAddTransaction } from './components/transactions/QuickAddTransaction';
 import { TeamSection } from './components/team/TeamSection';
+import { ClientList } from './components/clients/ClientList';
 import { CashBurnEducation } from './components/education/CashBurnEducation';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
@@ -55,7 +56,7 @@ export function App() {
                       <RevenueTrend />
                       <ExpenseBreakdown />
                     </div>
-
+                    <ClientList />
                     <QuickAddTransaction />
                     <TransactionList />
                     <TeamSection />
