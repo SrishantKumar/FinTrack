@@ -15,8 +15,8 @@ const faqs = [
     answer: 'Each section (Cash Balance, Burn Rate, etc.) has an export button that allows you to download the data as a PDF report.'
   },
   {
-    question: 'How do I connect my bank account?',
-    answer: 'Go to Data Integrations section and click on "Connect Bank Account". Follow the secure authentication process to link your account.'
+    question: 'How do I manage my transactions?',
+    answer: 'You can view, filter, and search your transactions in the Transactions section. Use the filters to sort by date, type, or category.'
   }
 ];
 
