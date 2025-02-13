@@ -79,9 +79,6 @@ export function MetricsGrid() {
     .reduce((sum, t) => sum + t.amount, 0) / 12;
 
   const runwayMonths = Math.floor(Math.max(0, cashBalance / averageMonthlyExpenses));
-  const previousRunway = Math.floor(
-    Math.max(0, (cashBalance - (currentMonthIncome - currentMonthExpenses)) / averageMonthlyExpenses)
-  );
 
   return (
     <div className="space-y-6">
