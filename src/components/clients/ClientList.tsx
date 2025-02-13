@@ -109,139 +109,110 @@ export function ClientList() {
     client.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleExportClientData = (client: Client) => {
-    const clientTransactions = transactions.filter(t => 
-      t.description.toLowerCase().includes(client.name.toLowerCase()) ||
-      t.description.toLowerCase().includes(client.company.toLowerCase())
-    );
-
-    const exportData = {
-      client,
-      transactions: clientTransactions,
-      summary: {
-        totalIncome: clientTransactions
-          .filter(t => t.type === 'income')
-          .reduce((sum, t) => sum + t.amount, 0),
-        totalExpenses: clientTransactions
-          .filter(t => t.type === 'expense')
-          .reduce((sum, t) => sum + t.amount, 0)
-      }
-    };
-
-    generatePDF('client-report', exportData);
-  };
-
-  const handleAddClient = (newClient: Client) => {
-    setClients(prev => [...prev, newClient]);
-    setShowAddModal(false);
-  };
-
-  if (loading) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 mb-8">
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <span className="ml-2 text-gray-600 dark:text-gray-400">Loading clients...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm mb-8">
-      <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Client Profiles
-            </h2>
-          </div>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Client Profiles</h2>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Manage and track your client relationships
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4 mr-2" />
             Add Client
           </button>
-        </div>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search clients..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
+          <button
+            onClick={() => generatePDF(clients, transactions)}
+            className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {filteredClients.map((client) => (
-          <div
-            key={client.id}
-            className="border border-gray-100 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-          >
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={client.image}
-                alt={client.name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div>
-                <h3 className="font-medium text-gray-900 dark:text-white">
-                  {client.name}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {client.company}
-                </p>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400" />
+        </div>
+        <input
+          type="text"
+          placeholder="Search clients..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 sm:text-sm"
+        />
+      </div>
+
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-500 dark:text-gray-400">Loading clients...</p>
+        </div>
+      ) : filteredClients.length === 0 ? (
+        <div className="text-center py-12">
+          <Users className="h-12 w-12 text-gray-400 mx-auto" />
+          <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">No clients found</h3>
+          <p className="mt-2 text-gray-500 dark:text-gray-400">
+            Try adjusting your search or add a new client.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredClients.map((client) => (
+            <div
+              key={client.id}
+              onClick={() => setSelectedClient(client)}
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden group"
+            >
+              <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700">
+                <img
+                  src={client.image}
+                  alt={client.name}
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">{client.name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{client.company}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    client.status === 'active'
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                  }`}>
+                    {client.status}
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                    {client.category}
+                  </span>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {client.category}
-              </span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                client.status === 'active'
-                  ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-              }`}>
-                {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
-              </span>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setSelectedClient(client)}
-                className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg"
-              >
-                View Profile
-              </button>
-              <button
-                onClick={() => handleExportClientData(client)}
-                className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg"
-              >
-                <Download className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {selectedClient && (
         <ClientProfile
           client={selectedClient}
           onClose={() => setSelectedClient(null)}
+          transactions={transactions}
         />
       )}
 
       {showAddModal && (
         <AddClientModal
           onClose={() => setShowAddModal(false)}
-          onAdd={handleAddClient}
+          onAdd={(newClient) => {
+            setClients([...clients, { ...newClient, id: (clients.length + 1).toString() }]);
+            setShowAddModal(false);
+          }}
         />
       )}
     </div>

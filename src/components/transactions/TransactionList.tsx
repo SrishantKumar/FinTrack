@@ -59,153 +59,140 @@ export function TransactionList() {
 
   const filteredTransactions = transactions.filter(filterTransactions);
 
-  if (loading) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 mb-8">
-        <div className="flex items-center justify-center">
-          <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-          <span className="ml-2 text-gray-600 dark:text-gray-400">Loading transactions...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 mb-8">
-        <div className="flex items-center justify-center text-red-500">
-          <AlertCircle className="h-8 w-8" />
-          <span className="ml-2">Error loading transactions. Please try again later.</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm mb-8">
-      <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
-        <div className="mt-4 flex gap-4">
-          <div className="flex-1 relative">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Transactions</h2>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search transactions..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
           </div>
-          <button 
+          <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`px-4 py-2 border rounded-lg flex items-center gap-2 transition-colors ${
-              showFilters
-                ? 'bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400'
-                : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
+            className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           >
-            <Filter className="h-4 w-4" />
-            Filter
+            <Filter className="h-5 w-5" />
           </button>
         </div>
-
-        {showFilters && (
-          <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Type
-                </label>
-                <select
-                  value={filters.type}
-                  onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as FilterState['type'] }))}
-                  className="w-full rounded-lg border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-                >
-                  <option value="all">All Types</option>
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Category
-                </label>
-                <select
-                  value={filters.category}
-                  onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full rounded-lg border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Date Range
-                </label>
-                <select
-                  value={filters.dateRange}
-                  onChange={(e) => setFilters(prev => ({ ...prev, dateRange: e.target.value as FilterState['dateRange'] }))}
-                  className="w-full rounded-lg border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-                >
-                  <option value="all">All Time</option>
-                  <option value="today">Today</option>
-                  <option value="week">Last 7 Days</option>
-                  <option value="month">This Month</option>
-                  <option value="year">This Year</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-700">
-        {filteredTransactions.length === 0 ? (
-          <div className="p-6 text-center text-gray-500 dark:text-gray-400">
-            No transactions found matching your filters.
-          </div>
-        ) : (
-          filteredTransactions.map((transaction) => (
-            <div key={transaction.id} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700">
-              <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-full ${
-                  transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'
-                }`}>
-                  {transaction.type === 'income' ? (
-                    <ArrowUpRight className="h-5 w-5 text-green-600 dark:text-green-300" />
-                  ) : (
-                    <ArrowDownRight className="h-5 w-5 text-red-600 dark:text-red-300" />
-                  )}
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white">{transaction.description}</h3>
-                  <div className="flex gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span>{transaction.date}</span>
-                    <span>•</span>
-                    <span>{transaction.category}</span>
-                    <span>•</span>
-                    <span className="capitalize">{transaction.status}</span>
-                  </div>
-                </div>
-              </div>
-              <div className={`font-medium ${
-                transaction.type === 'income' 
-                  ? 'text-green-600 dark:text-green-400' 
-                  : 'text-red-600 dark:text-red-400'
-              }`}>
-                {transaction.type === 'income' ? '+' : '-'}
-                {formatAmount(transaction.amount)}
-              </div>
+      {/* Filters */}
+      {showFilters && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <select
+            value={filters.type}
+            onChange={(e) => setFilters({ ...filters, type: e.target.value as FilterState['type'] })}
+            className="w-full p-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          >
+            <option value="all">All Types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+
+          <select
+            value={filters.category}
+            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+            className="w-full p-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={filters.dateRange}
+            onChange={(e) => setFilters({ ...filters, dateRange: e.target.value as FilterState['dateRange'] })}
+            className="w-full p-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          >
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="flex items-center gap-2 p-4 text-red-800 bg-red-100 dark:bg-red-900/30 dark:text-red-400 rounded-lg">
+          <AlertCircle className="h-5 w-5" />
+          <p>Error loading transactions. Please try again later.</p>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex items-center justify-center p-8">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        </div>
+      ) : (
+        /* Transactions List */
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="text-left text-sm font-medium text-gray-500 dark:text-gray-400">
+                <th className="pb-4 pr-6">Date</th>
+                <th className="pb-4 pr-6">Description</th>
+                <th className="pb-4 pr-6">Category</th>
+                <th className="pb-4 pr-6 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+              {filteredTransactions.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className="group hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                >
+                  <td className="py-4 pr-6 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </td>
+                  <td className="py-4 pr-6 text-sm text-gray-900 dark:text-white">
+                    {transaction.description}
+                  </td>
+                  <td className="py-4 pr-6 text-sm text-gray-600 dark:text-gray-300">
+                    {transaction.category}
+                  </td>
+                  <td className="py-4 pr-6 whitespace-nowrap text-sm text-right">
+                    <span className="flex items-center justify-end gap-1">
+                      {transaction.type === 'income' ? (
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <ArrowDownRight className="h-4 w-4 text-red-500" />
+                      )}
+                      <span
+                        className={
+                          transaction.type === 'income'
+                            ? 'text-green-600 dark:text-green-400'
+                            : 'text-red-600 dark:text-red-400'
+                        }
+                      >
+                        {formatAmount(transaction.amount)}
+                      </span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Empty State */}
+          {filteredTransactions.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-gray-500 dark:text-gray-400">No transactions found</p>
             </div>
-          ))
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { MetricsGrid } from './components/metrics/MetricsGrid';
 import { RevenueTrend } from './components/charts/RevenueTrend';
@@ -17,38 +16,58 @@ export function App() {
     <Router>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
-          <div className="mb-8">
+        <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* Header Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               Financial Overview
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
               Track your startup's financial health and metrics
             </p>
+            <div className="mt-4">
+              <DataSyncStatus />
+            </div>
           </div>
 
-          <DataSyncStatus />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <MetricsGrid />
-            <RevenueTrend />
+          {/* Metrics and Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <MetricsGrid />
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <RevenueTrend />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <ExpenseBreakdown />
-            <QuickAddTransaction />
+          {/* Expense and Quick Add Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <ExpenseBreakdown />
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <QuickAddTransaction />
+            </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+          {/* Transactions Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <TransactionList />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Client Profiles Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <ClientList />
-            <TeamSection />
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          {/* Education Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <CashBurnEducation />
+          </div>
+
+          {/* Team Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8" id="team-section">
+            <TeamSection />
           </div>
         </main>
         <Footer />
