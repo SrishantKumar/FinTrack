@@ -10,6 +10,10 @@ interface Notification {
   isRead: boolean;
 }
 
+interface NotificationsPanelProps {
+  onClose: () => void;
+}
+
 const allNotifications: Notification[] = [
   {
     id: 1,
@@ -53,7 +57,7 @@ const allNotifications: Notification[] = [
   }
 ];
 
-export function NotificationsPanel() {
+export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
   const [notifications, setNotifications] = useState<Notification[]>(allNotifications);
   const [showAll, setShowAll] = useState(false);
 
@@ -91,6 +95,12 @@ export function NotificationsPanel() {
               className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
             >
               Mark all as read
+            </button>
+            <button 
+              onClick={onClose}
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+            >
+              Close
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Mail, Building, Tag, Download, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { Client } from './ClientList';
+import { Client, Transaction } from './ClientList';
 import { useTransactions } from '../../context/TransactionContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { generatePDF } from '../utils/pdfGenerator';
@@ -8,10 +8,10 @@ import { generatePDF } from '../utils/pdfGenerator';
 interface ClientProfileProps {
   client: Client;
   onClose: () => void;
+  transactions: Transaction[];
 }
 
-export function ClientProfile({ client, onClose }: ClientProfileProps) {
-  const { transactions } = useTransactions();
+export function ClientProfile({ client, onClose, transactions }: ClientProfileProps) {
   const { formatAmount } = useCurrency();
   const [activeTab, setActiveTab] = useState<'overview' | 'transactions'>('overview');
 

@@ -2,13 +2,28 @@ import { useAlerts } from '../../context/AlertContext';
 import { formatDistanceToNow } from 'date-fns';
 import { AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
 
-export function AlertPanel() {
+interface AlertPanelProps {
+  onClose: () => void;
+}
+
+export function AlertPanel({ onClose }: AlertPanelProps) {
   const { alerts, markAsRead, markAllAsRead, dismissAlert } = useAlerts();
 
   if (alerts.length === 0) {
     return (
-      <div className="p-6 text-center text-gray-500 dark:text-gray-400">
-        No alerts to display.
+      <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">Alerts</h3>
+          <button 
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+          >
+            Close
+          </button>
+        </div>
+        <div className="p-4">
+          <p className="text-gray-500 dark:text-gray-400">No active alerts</p>
+        </div>
       </div>
     );
   }
@@ -36,20 +51,17 @@ export function AlertPanel() {
   };
 
   return (
-    <div className="divide-y divide-gray-100 dark:divide-gray-700">
-      <div className="p-4 flex items-center justify-between">
-        <h3 className="font-medium text-gray-900 dark:text-white">Alerts</h3>
-        {alerts.some(alert => !alert.isRead) && (
-          <button
-            onClick={markAllAsRead}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-          >
-            Mark all as read
-          </button>
-        )}
+    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Alerts</h3>
+        <button 
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+        >
+          Close
+        </button>
       </div>
-
-      <div className="max-h-[400px] overflow-y-auto">
+      <div className="max-h-[400px] overflow-y-auto p-4">
         {alerts.map((alert) => (
           <div
             key={alert.id}

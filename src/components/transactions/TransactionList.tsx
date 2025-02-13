@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDownRight, ArrowUpRight, Filter, Search, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Filter, Search, Loader2, AlertCircle, ChevronDown } from 'lucide-react';
 import { useTransactions } from '../../context/TransactionContext';
 import { useCurrency } from '../../context/CurrencyContext';
 
@@ -14,6 +14,7 @@ export function TransactionList() {
   const { formatAmount } = useCurrency();
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     type: 'all',
     category: 'all',
@@ -57,12 +58,25 @@ export function TransactionList() {
     return matchesSearch && matchesType && matchesCategory && matchesDate;
   };
 
-  const filteredTransactions = transactions.filter(filterTransactions);
+  const filteredTransactions = transactions
+    .filter(filterTransactions)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const displayedTransactions = showAllTransactions
+    ? filteredTransactions
+    : filteredTransactions.slice(0, 10);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Transactions</h2>
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Transactions</h2>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            {showAllTransactions 
+              ? `Showing all ${filteredTransactions.length} transactions`
+              : `Showing last 10 of ${filteredTransactions.length} transactions`}
+          </p>
+        </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -136,60 +150,73 @@ export function TransactionList() {
           <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         </div>
       ) : (
-        /* Transactions List */
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-sm font-medium text-gray-500 dark:text-gray-400">
-                <th className="pb-4 pr-6">Date</th>
-                <th className="pb-4 pr-6">Description</th>
-                <th className="pb-4 pr-6">Category</th>
-                <th className="pb-4 pr-6 text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {filteredTransactions.map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className="group hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                >
-                  <td className="py-4 pr-6 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                    {new Date(transaction.date).toLocaleDateString()}
-                  </td>
-                  <td className="py-4 pr-6 text-sm text-gray-900 dark:text-white">
-                    {transaction.description}
-                  </td>
-                  <td className="py-4 pr-6 text-sm text-gray-600 dark:text-gray-300">
-                    {transaction.category}
-                  </td>
-                  <td className="py-4 pr-6 whitespace-nowrap text-sm text-right">
-                    <span className="flex items-center justify-end gap-1">
-                      {transaction.type === 'income' ? (
-                        <ArrowUpRight className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <ArrowDownRight className="h-4 w-4 text-red-500" />
-                      )}
-                      <span
-                        className={
-                          transaction.type === 'income'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
-                        }
-                      >
-                        {formatAmount(transaction.amount)}
-                      </span>
-                    </span>
-                  </td>
+        <div className="space-y-4">
+          {/* Transactions List */}
+          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                  <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                {displayedTransactions.map((transaction) => (
+                  <tr
+                    key={transaction.id}
+                    className="group hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  >
+                    <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                      {new Date(transaction.date).toLocaleDateString()}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-900 dark:text-white">
+                      {transaction.description}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600 dark:text-gray-300">
+                      {transaction.category}
+                    </td>
+                    <td className="py-4 px-4 whitespace-nowrap text-sm text-right">
+                      <span className="flex items-center justify-end gap-1">
+                        {transaction.type === 'income' ? (
+                          <ArrowUpRight className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <ArrowDownRight className="h-4 w-4 text-red-500" />
+                        )}
+                        <span
+                          className={
+                            transaction.type === 'income'
+                              ? 'text-green-600 dark:text-green-400'
+                              : 'text-red-600 dark:text-red-400'
+                          }
+                        >
+                          {formatAmount(transaction.amount)}
+                        </span>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          {/* Empty State */}
-          {filteredTransactions.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500 dark:text-gray-400">No transactions found</p>
-            </div>
+            {/* Empty State */}
+            {filteredTransactions.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">No transactions found</p>
+              </div>
+            )}
+          </div>
+
+          {/* View All Button */}
+          {!showAllTransactions && filteredTransactions.length > 10 && (
+            <button
+              onClick={() => setShowAllTransactions(true)}
+              className="w-full py-3 flex items-center justify-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors"
+            >
+              View All Transactions
+              <ChevronDown className="h-4 w-4" />
+            </button>
           )}
         </div>
       )}

@@ -194,62 +194,44 @@ function SettingsModal({ isOpen, onClose, section }: SettingsModalProps) {
   );
 }
 
-export function SettingsPanel() {
-  const [selectedSection, setSelectedSection] = useState('');
+interface SettingsPanelProps {
+  onClose: () => void;
+}
 
-  const settingsMenu = [
-    {
-      id: 'general',
-      icon: Settings,
-      label: 'General Settings',
-      description: 'Account preferences and settings'
-    },
-    {
-      id: 'notifications',
-      icon: Bell,
-      label: 'Notifications',
-      description: 'Manage your notification preferences'
-    }
-  ];
-
+export function SettingsPanel({ onClose }: SettingsPanelProps) {
   return (
-    <>
-      <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
-        <div className="p-4 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
+    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Settings</h3>
+        <button 
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+        >
+          Close
+        </button>
+      </div>
+      <div className="p-4 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Currency
+          </label>
+          <select className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
         </div>
-        <div className="p-2">
-          {settingsMenu.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelectedSection(item.id)}
-              className={`w-full p-3 flex items-center gap-3 rounded-lg hover:bg-gray-50 transition-colors ${
-                selectedSection === item.id
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <item.icon className="h-4 w-4 text-gray-600" />
-              </div>
-              <div className="text-left">
-                <div className="text-sm font-medium text-gray-900">
-                  {item.label}
-                </div>
-                <div className="text-xs text-gray-500">
-                  {item.description}
-                </div>
-              </div>
-            </button>
-          ))}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Date Format
+          </label>
+          <select className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+          </select>
         </div>
       </div>
-
-      <SettingsModal
-        isOpen={selectedSection !== ''}
-        onClose={() => setSelectedSection('')}
-        section={selectedSection}
-      />
-    </>
+    </div>
   );
 }

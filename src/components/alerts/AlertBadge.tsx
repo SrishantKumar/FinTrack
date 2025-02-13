@@ -1,15 +1,13 @@
 import { useAlerts } from '../../context/AlertContext';
 
-export function AlertBadge() {
-  const { unreadCount } = useAlerts();
+interface AlertBadgeProps {
+  count: number;
+}
 
-  if (unreadCount === 0) return null;
-
+export function AlertBadge({ count }: AlertBadgeProps) {
   return (
-    <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center">
-      <span className="text-xs font-medium text-white">
-        {unreadCount > 9 ? '9+' : unreadCount}
-      </span>
-    </div>
+    <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+      {count}
+    </span>
   );
 }
