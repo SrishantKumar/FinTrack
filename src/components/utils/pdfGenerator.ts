@@ -2,7 +2,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Client, Transaction } from '../clients/ClientList';
 
-export const generatePDF = (clients: Client[], transactions: Transaction[]) => {
+export const generatePDF = (clients: readonly Client[], transactions: readonly Transaction[]) => {
   const doc = new jsPDF();
   
   doc.setFontSize(16);

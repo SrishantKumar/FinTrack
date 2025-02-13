@@ -1,13 +1,16 @@
 import { X, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
-import { useTransactions } from '../../context/TransactionContext';
+import { Transaction } from '../clients/ClientList';
 import { generatePDF } from '../utils/pdfGenerator';
 
 interface CashBalanceModalProps {
   onClose: () => void;
+  transactions: Transaction[];
 }
 
-export function CashBalanceModal({ onClose }: CashBalanceModalProps) {
-  const { transactions, cashBalance } = useTransactions();
+export function CashBalanceModal({ onClose, transactions }: CashBalanceModalProps) {
+  const handleExport = () => {
+    generatePDF([], transactions);
+  };
 
   // Calculate 30-day change
   const thirtyDaysAgo = new Date();
@@ -16,14 +19,6 @@ export function CashBalanceModal({ onClose }: CashBalanceModalProps) {
   const recentTransactions = transactions
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
-
-  const handleExport = () => {
-    const exportData = recentTransactions.map(t => ({
-      ...t,
-      balance: cashBalance // You might want to calculate running balance here
-    }));
-    generatePDF('cash-balance', exportData);
-  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -61,7 +56,7 @@ export function CashBalanceModal({ onClose }: CashBalanceModalProps) {
                 Current Balance
               </p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
-                ${cashBalance.toLocaleString()}
+                ${transactions.reduce((acc, curr) => acc + curr.amount, 0).toLocaleString()}
               </p>
             </div>
           </div>

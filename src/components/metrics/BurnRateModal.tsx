@@ -1,5 +1,11 @@
 import { X, Download, TrendingDown } from 'lucide-react';
+import { Transaction } from '../clients/ClientList';
 import { generatePDF } from '../utils/pdfGenerator';
+
+interface BurnRateModalProps {
+  onClose: () => void;
+  transactions: Transaction[];
+}
 
 const burnRateData = [
   {
@@ -28,11 +34,11 @@ const burnRateData = [
   }
 ];
 
-interface BurnRateModalProps {
-  onClose: () => void;
-}
+export function BurnRateModal({ onClose, transactions }: BurnRateModalProps) {
+  const handleExport = () => {
+    generatePDF([], transactions);
+  };
 
-export function BurnRateModal({ onClose }: BurnRateModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
@@ -48,7 +54,7 @@ export function BurnRateModal({ onClose }: BurnRateModalProps) {
           </div>
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => generatePDF('burn-rate', burnRateData)}
+              onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
             >
               <Download className="h-4 w-4" />

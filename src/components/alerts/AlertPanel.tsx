@@ -7,7 +7,7 @@ interface AlertPanelProps {
 }
 
 export function AlertPanel({ onClose }: AlertPanelProps) {
-  const { alerts, markAsRead, markAllAsRead, dismissAlert } = useAlerts();
+  const { alerts, markAsRead, dismissAlert } = useAlerts();
 
   if (alerts.length === 0) {
     return (

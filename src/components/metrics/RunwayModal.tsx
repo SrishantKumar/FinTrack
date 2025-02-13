@@ -1,4 +1,5 @@
 import { X, Download, Clock } from 'lucide-react';
+import { Transaction } from '../clients/ClientList';
 import { generatePDF } from '../utils/pdfGenerator';
 
 const runwayData = {
@@ -34,9 +35,14 @@ const runwayData = {
 
 interface RunwayModalProps {
   onClose: () => void;
+  transactions: Transaction[];
 }
 
-export function RunwayModal({ onClose }: RunwayModalProps) {
+export function RunwayModal({ onClose, transactions }: RunwayModalProps) {
+  const handleExport = () => {
+    generatePDF([], transactions);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
@@ -52,7 +58,7 @@ export function RunwayModal({ onClose }: RunwayModalProps) {
           </div>
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => generatePDF('runway', runwayData)}
+              onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
             >
               <Download className="h-4 w-4" />

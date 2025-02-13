@@ -1,5 +1,11 @@
 import { X, Download, TrendingUp } from 'lucide-react';
+import { Transaction } from '../clients/ClientList';
 import { generatePDF } from '../utils/pdfGenerator';
+
+interface RevenueGrowthModalProps {
+  onClose: () => void;
+  transactions: Transaction[];
+}
 
 const revenueData = [
   {
@@ -26,11 +32,11 @@ const revenueData = [
   }
 ];
 
-interface RevenueGrowthModalProps {
-  onClose: () => void;
-}
+export function RevenueGrowthModal({ onClose, transactions }: RevenueGrowthModalProps) {
+  const handleExport = () => {
+    generatePDF([], transactions);
+  };
 
-export function RevenueGrowthModal({ onClose }: RevenueGrowthModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
@@ -46,7 +52,7 @@ export function RevenueGrowthModal({ onClose }: RevenueGrowthModalProps) {
           </div>
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => generatePDF('revenue-growth', revenueData)}
+              onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
             >
               <Download className="h-4 w-4" />

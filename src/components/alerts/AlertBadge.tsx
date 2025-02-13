@@ -1,5 +1,3 @@
-import { useAlerts } from '../../context/AlertContext';
-
 interface AlertBadgeProps {
   count: number;
 }
